@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0080)http://dept-info.labri.fr/~baudon/Master/AO/Vietnam16/TD/Automaton/Automata.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  
+  <title>Automata</title>
+</head>
+<body>
+<h1 style="text-align: center;">Automata</h1>
+A finite automaton is a 5-tuple A = (Q, V, T, I, F) where :<br>
+<ul>
+  <li>Q is a finite non empty set of <span style="font-style: italic;">states</span>,</li>
+  <li>V is a finite non empty set of <span style="font-style: italic;">inputs</span>,</li>
+  <li>T is a subset of QxVxQ, called set of <span style="font-style: italic;">transitions</span>,</li>
+  <li>I is a non empty subset of Q, called set of <span style="font-style: italic;">initial states</span>,</li>
+  <li>F is a subset of Q called set of <span style="font-style: italic;">final states</span>.</li>
+</ul>
+A word w = w1,w2, .., wn on V is said <span style="font-style: italic;">accepted</span>
+by A iff it exists a path p = p0,p1,p2,...,pn from a state i of I to a
+state f of F where <br>
+each pi is a state of Q, p0 = i, pn = f, and for each i, it exists a
+transition t = (pi-1, wi, pi) in T.<br>
+<br>
+An automaton is said <span style="font-style: italic;">deterministic</span>
+iff <br>
+<ul>
+  <li>I is a singleton,&nbsp;</li>
+  <li>for each triplet (s1, x, s2) in QxVxQ, it exists at most one
+transition (s1, x, s2) in T.</li>
+</ul>
+An automaton is generally represented using a directed grph. States are
+the vertices of the graph. The transitions are represented by directed
+labeled edges, using the corresponding label from V. Inital states are
+indicated by an incoming arrow on the state and final states by an
+outgoing arrow. The following figure represents the automaton A = (Q =
+{1, 2, 3}, V = {a, b}, T = {(1,a,1), (1,b,2), (2,a,3), (3,a,2),(3,b1)},
+I = {1}, F = {1,2}}. The word <span style="font-style: italic;">abab</span>
+is recognized by A, but not the word <span style="font-style: italic;">aba</span>
+(3 is not final) or <span style="font-style: italic;">abb</span>
+(there is no transition from state 2 with label <span style="font-style: italic;">b</span>).<br>
+<br>
+<div style="text-align: center;">&nbsp;<img style="width: 285px; height: 238px;" alt="an automaton" src="./Automata_files/automate.png"><br>
+</div>
+<br>
+We consider the interfaces <a href="http://dept-info.labri.fr/~baudon/Master/AO/Vietnam16/TD/Automaton/src/State.java">State</a> and <a href="http://dept-info.labri.fr/~baudon/Master/AO/Vietnam16/TD/Automaton/src/Transition.java">Transition</a> and the class <a href="http://dept-info.labri.fr/~baudon/Master/AO/Vietnam16/TD/Automaton/src/DeterministicAutomaton.java">DeterministicAutomaton</a>.<br>
+<h2>Part 1 : Finite State Automaton</h2>
+<ol>
+  <li>Complete the class <span style="font-family: Courier New,Courier,monospace;">DeterministicAutomaton</span>
+with the new methods :</li>
+  <ul>
+    <li><span style="font-family: Courier New,Courier,monospace;">public
+State
+initialState()</span><br>
+which returns the initial state of the automaton</li>
+    <li><span style="font-family: Courier New,Courier,monospace;">public
+Transition
+transition(State s, Object label)</span><br>
+which returns the transition of source <span style="font-family: Courier New,Courier,monospace;">s</span> and label
+      <span style="font-family: Courier New,Courier,monospace;">label</span>
+if it exists, <span style="font-family: Courier New,Courier,monospace;">null</span>
+otherwise. If the state&nbsp;<span style="font-family: Courier New,Courier,monospace;">s</span> does not
+belong to the automaton, the method will thrown a <span style="font-family: Courier New,Courier,monospace;">java.lang.NoSuchElementException</span>.</li>
+    <li><span style="font-family: Courier New,Courier,monospace;">public
+boolean
+recognize(Object [] word)</span> and&nbsp;<br>
+      <span style="font-family: Courier New,Courier,monospace;">public
+boolean recognize(Iterator&lt;Object&gt; word)</span><br>
+which returns if a word is recognize by the automaton</li>
+    <li>Add an handle in the methods <span style="font-family: Courier New,Courier,monospace;">recognize </span>which
+allows
+to modify the behavior of that methods by inheritance when the
+current state changes.</li>
+  </ul>
+  <li>Modify the class in such a way that <span style="font-family: Courier New,Courier,monospace;">DeterministicAutomaton(Transition[]
+transitions)</span> throws an exception</li>
+  <ul>
+    <li><span style="font-family: Courier New,Courier,monospace;">NotDeterministTransitionException</span>
+      <br>
+if two elements of transitions have the same source and the same label,</li>
+    <li><span style="font-family: Courier New,Courier,monospace;">NotDeterministInitalStateException</span><br>
+if among the states source or target of a transition in transitions, it
+exists more than one initial state,</li>
+    <li><span style="font-family: Courier New,Courier,monospace;">UnknownInitialStateException&nbsp;</span><br>
+if among the states source or target of a transition in transitions,
+none of them is an initial state.<br>
+      <br>
+      <span style="font-style: italic;">Remark</span> : the exceptions
+may be thrown either in the constructor or in the method <span style="font-family: Courier New,Courier,monospace;">addState(State e)</span>.</li>
+  </ul>
+  <li>Add the classes of the exceptions.</li>
+  <li>Add two classes <span style="font-family: Courier New,Courier,monospace;">StateImpl</span>
+and <span style="font-family: Courier New,Courier,monospace;">TransitionImpl</span>
+which implement respectively <span style="font-family: Courier New,Courier,monospace;">State</span> and <span style="font-family: Courier New,Courier,monospace;">Transition</span>.
+The instances of those two classes will be unmodifiable and the datas
+will be given to the constructors.</li>
+  <li>Add a test class.</li>
+  <li>Modify the code in order to make generic the type of the labels
+in the transitions. For exemple, the new prototype of the method <span style="font-family: Courier New,Courier,monospace;">label()</span> in
+the interface <span style="font-family: Courier New,Courier,monospace;">Transition</span>
+will become <span style="font-family: Courier New,Courier,monospace;">public
+T
+label()</span>.</li>
+</ol>
+The goals of the parts 2 and 3 are similar : allowing to add an action
+when a transition is used during a word recognition. We will propose
+two different way to answer this goal, <span style="font-weight: bold;">without
+changing
+the code produced in the part 1</span>. Moreover, the new
+classes will not be in the same package than the classes of part 1.
+<h2>Part 2 : Observable Automaton</h2>
+We want to create a class <span style="font-family: Courier New,Courier,monospace;">ObservableAutomaton</span>
+in order to have a class of automata which will notify attached
+observers each time a transition is used during a word recognition. All
+the classes of this part will be in a new package <span style="font-family: Courier New,Courier,monospace;">observable</span>,
+except the test which will be in the default package.<br>
+<ol>
+  <li>Look at the documentation of the class <a href="http://download.oracle.com/javase/6/docs/api/java/util/Observable.html"><span style="font-family: Courier New,Courier,monospace;">java.util.Observable</span></a>,
+especially
+the method <span style="font-family: Courier New,Courier,monospace;">setChanged()</span>.
+What
+is the problem&nbsp;?</li>
+  <li>In order to solve this problem, we will use the following
+solution :</li>
+  <ul>
+    <li>the class <span style="font-family: Courier New,Courier,monospace;">ObservableAutomaton
+
+      </span>inherits only from <span style="font-family: Courier New,Courier,monospace;">DeterministAutomaton</span>
+;</li>
+    <li>we add an internal static class in <span style="font-family: Courier New,Courier,monospace;">ObservableAutomaton</span>
+which extends <span style="font-family: Courier New,Courier,monospace;">Observable</span>
+and where the method <span style="font-family: Courier New,Courier,monospace;">notifyObservers(Object
+arg)</span> is changed by invoking the method <span style="font-family: Courier New,Courier,monospace;">setChanged()</span>
+before the notification ; each instance of <span style="font-family: Courier New,Courier,monospace;">ObservableAutomaton</span>&nbsp;will
+use
+an instance of this internal class as variable ;</li>
+    <li>we add a method <span style="font-family: Courier New,Courier,monospace;">addObserver(Observer
+o)</span> to <span style="font-family: Courier New,Courier,monospace;">ObservableAutomaton</span>
+which attach an observer to the automaton ;</li>
+  </ul>
+  <li>Create a class implemeting <span style="font-family: Courier New,Courier,monospace;">Observer</span>
+which print on the standard output the label of the crossed transition.
+Use it in the test class to write the recognized word on the standard
+output.</li>
+</ol>
+<h2>Part 3 : Finite State Machine</h2>
+In this part, we will use an interface <a style="font-family: Courier New,Courier,monospace;" href="http://dept-info.labri.fr/~baudon/Master/AO/Vietnam16/TD/Automaton/src/Action.java">Action&lt;T&gt;</a>. All the classes of this
+part will be in a new package <span style="font-family: Courier New,Courier,monospace;">machine</span>,
+except the test which will be in the default package.<br>
+<ol>
+  <li>Write a class <span style="font-family: Courier New,Courier,monospace;">TransitionWithAction&lt;T&gt;</span>
+which implements <span style="font-family: Courier New,Courier,monospace;">Transition&lt;T&gt;</span>
+and associates a transition <span style="font-style: italic;">t</span>
+and an action <span style="font-style: italic;">a</span>. <span style="font-style: italic;">t</span> and <span style="font-style: italic;">a</span> are given at the construction.
+The&nbsp;methods of <span style="font-family: Courier New,Courier,monospace;">Transition</span>
+to implement will been done by delegation to <span style="font-style: italic;">t</span>. Moreover, &nbsp;<span style="font-family: Courier New,Courier,monospace;">TransitionWithAction</span>
+implements a method <span style="font-family: Courier New,Courier,monospace;">State cross()</span>
+which executes the action <span style="font-style: italic;">a</span>
+with the label of <span style="font-style: italic;">t</span> as
+argument, and returns the target of <span style="font-style: italic;">t</span>.</li>
+  <li>Write a class <span style="font-family: Courier New,Courier,monospace;">FiniteStateMachine&lt;T&gt;</span>
+which extends <span style="font-family: Courier New,Courier,monospace;">DeterministAutomaton</span>
+and which uses instances of <span style="font-family: Courier New,Courier,monospace;">TransitionWithAction</span>
+as transitions. When a transition of an instance of <span style="font-family: Courier New,Courier,monospace;">FiniteStateMachine</span>
+is used during the recognition of a word, then the method <span style="font-family: Courier New,Courier,monospace;">cross()</span> on
+this transition is invoked.</li>
+  <li>Create a class implementing <span style="font-family: Courier New,Courier,monospace;">Action&lt;T&gt;</span>&nbsp;which
+print
+a <span style="font-family: Courier New,Courier,monospace;">String</span>
+on the standard output. Use it in the test class to write the
+recognized word on the standard output.</li>
+</ol>
+<h2>Conclusion</h2>
+<div style="margin-left: 40px;">Compare the two solutions of part 2 and
+3.<br>
+</div>
+&nbsp;
+
+
+</body></html>
